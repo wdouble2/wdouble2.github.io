@@ -94,6 +94,20 @@ header.nav{position:sticky;top:0;z-index:5;background:rgba(11,17,28,.82);backdro
 .term td{color:var(--muted)}
 .term .status{margin-top:12px;color:var(--muted)}
 .term .status b{color:var(--accent);font-weight:500}
+/* interactive SQL window */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.term-bar select{margin-left:8px;min-width:0;max-width:100%;font:500 12px var(--mono);color:var(--text);background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:3px 6px;cursor:pointer}
+.term-bar .hint{margin-left:auto;font:500 11px var(--mono);color:var(--cmt);white-space:nowrap}
+.sqlbox textarea{display:block;width:100%;margin:0;border:0;border-radius:0;resize:vertical;background:transparent;color:var(--text);font:13.5px/1.7 var(--mono);padding:16px 18px 8px;min-height:200px;tab-size:2}
+.sqlbox textarea:focus-visible{outline:0;box-shadow:inset 0 0 0 1px var(--key)}
+.sql-actions{display:flex;align-items:center;gap:12px;padding:2px 18px 12px}
+.btn.run{padding:7px 14px;font-size:13px;cursor:pointer}
+.btn.run:disabled{opacity:.5;cursor:wait;transform:none}
+.sql-actions .kbd{font:12px var(--mono);color:var(--cmt)}
+.sqlbox .res{max-height:260px;overflow:auto}
+.sqlbox .res th{position:sticky;top:0}
+.sqlbox td.num{text-align:right;color:var(--text)}
+.term .err{color:#FF8A80}
 
 /* ---------- sections ---------- */
 section{padding:76px 0;border-top:1px solid var(--line)}
@@ -182,6 +196,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   .avatar{width:120px;font-size:36px}
   .term pre{font-size:12.5px;padding:14px 14px 4px}
   .term .out{padding:4px 14px 14px;font-size:12px}
+  .sqlbox textarea{font-size:16px;padding:14px 14px 6px;min-height:240px}
+  .sql-actions{padding:2px 14px 12px}
+  .term-bar .hint,.sql-actions .kbd{display:none}
 }
 </style>
 </head>
@@ -216,22 +233,36 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
       </div>
     </div>
 
-    <div class="term" role="img" aria-label="Terminal window showing the SQL query behind the NFL home-field advantage project">
-      <div class="term-bar"><i></i><i></i><i></i><span>sql/01_overall.sql</span></div>
-<pre><span class="cm">-- How often does the home team win?</span>
-<span class="kw">SELECT</span>
-  <span class="fn">COUNT</span>(*)                         <span class="kw">AS</span> games,
-  <span class="fn">ROUND</span>(<span class="fn">AVG</span>(<span class="st">1.0</span> * home_win) * <span class="st">100</span>, <span class="st">1</span>) <span class="kw">AS</span> home_win_pct,
-  <span class="fn">ROUND</span>(<span class="fn">AVG</span>(margin), <span class="st">1</span>)            <span class="kw">AS</span> avg_margin
-<span class="kw">FROM</span>   nfl.games
-<span class="kw">WHERE</span>  season <span class="kw">BETWEEN</span> <span class="st">2015</span> <span class="kw">AND</span> <span class="st">2025</span>;</pre>
+    <!-- Live SQL window: runs SQLite in the visitor's browser (sql.js) on data/nfl_games.csv.
+         No database login is involved; the data is a public copy of nfl.games. -->
+    <div class="term sqlbox" id="sqlbox">
+      <div class="term-bar"><i></i><i></i><i></i>
+        <select id="sql-preset" aria-label="Example query">
+          <option>sql/01_overall.sql</option>
+          <option>sql/02_by_season.sql</option>
+          <option>sql/03_covid_vs_normal.sql</option>
+          <option>sql/04_team_home_boost.sql</option>
+          <option>explore: SELECT * …</option>
+        </select>
+        <span class="hint">nfl.games · edit me</span>
+      </div>
+      <label class="sr" for="sql-input">SQL query to run on the nfl.games table</label>
+      <textarea id="sql-input" wrap="off" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">SELECT COUNT(*) AS games,
+       ROUND(100.0 * AVG(1.0 * home_win), 1) AS home_win_pct,
+       ROUND(AVG(1.0 * margin), 1) AS avg_home_margin
+FROM nfl.games;</textarea>
+      <div class="sql-actions">
+        <button class="btn primary run" id="sql-run" type="button" disabled>▶ Run</button>
+        <span class="kbd">⌘/Ctrl + Enter</span>
+      </div>
       <div class="out">
-        <!-- EDIT later: replace the "running" row with the real numbers when the project is done -->
-        <table>
-          <thead><tr><th>games</th><th>home_win_pct</th><th>avg_margin</th></tr></thead>
-          <tbody><tr><td>…</td><td>…</td><td>…</td></tr></tbody>
-        </table>
-        <div class="status"><span class="pr">❯</span> status: <b>building</b>, results posting soon</div>
+        <div class="res" id="sql-out">
+          <table>
+            <thead><tr><th>games</th><th>home_win_pct</th><th>avg_home_margin</th></tr></thead>
+            <tbody><tr><td class="num">2837</td><td class="num">54.6</td><td class="num">1.8</td></tr></tbody>
+          </table>
+        </div>
+        <div class="status" id="sql-status" aria-live="polite"><span class="pr">❯</span> loading 2,837 games…</div>
       </div>
     </div>
   </div>
@@ -403,6 +434,88 @@ document.getElementById("yr").textContent = new Date().getFullYear();
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
   document.querySelectorAll("section[id]").forEach(function (s) { io.observe(s); });
+})();
+</script>
+
+<!-- Live SQL window (see the "sqlbox" block in the hero). -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.12.0/sql-wasm.js"></script>
+<script>
+(function () {
+  var PRESETS = [
+    "SELECT COUNT(*) AS games,\n       ROUND(100.0 * AVG(1.0 * home_win), 1) AS home_win_pct,\n       ROUND(AVG(1.0 * margin), 1) AS avg_home_margin\nFROM nfl.games;",
+    "SELECT season,\n       COUNT(*) AS games,\n       ROUND(100.0 * AVG(1.0 * home_win), 1) AS home_win_pct,\n       ROUND(AVG(1.0 * margin), 1) AS avg_home_margin\nFROM nfl.games\nGROUP BY season\nORDER BY season;",
+    "SELECT CASE WHEN covid_season = 1 THEN '2020 (few fans)' ELSE 'Normal seasons' END AS period,\n       COUNT(*) AS games,\n       ROUND(100.0 * AVG(1.0 * home_win), 1) AS home_win_pct\nFROM nfl.games\nGROUP BY covid_season\nORDER BY covid_season;",
+    "WITH team_games AS (\n    SELECT home_team AS team, 'home' AS venue, home_win AS won FROM nfl.games\n    UNION ALL\n    SELECT away_team AS team, 'away' AS venue, 1 - home_win AS won FROM nfl.games\n)\nSELECT team,\n       ROUND(100.0 * AVG(CASE WHEN venue = 'home' THEN 1.0 * won END), 1) AS home_win_pct,\n       ROUND(100.0 * AVG(CASE WHEN venue = 'away' THEN 1.0 * won END), 1) AS away_win_pct,\n       ROUND(100.0 * AVG(CASE WHEN venue = 'home' THEN 1.0 * won END)\n           - 100.0 * AVG(CASE WHEN venue = 'away' THEN 1.0 * won END), 1) AS home_boost\nFROM team_games\nGROUP BY team\nORDER BY home_boost DESC;",
+    "-- Columns: game_id, season, week, gameday, home_team, away_team,\n-- home_score, away_score, home_win, margin, roof, covid_season\nSELECT *\nFROM nfl.games\nWHERE home_team = 'DET'\nORDER BY gameday DESC\nLIMIT 20;"
+  ];
+  var MAX_ROWS = 200;
+  var sel = document.getElementById("sql-preset");
+  var input = document.getElementById("sql-input");
+  var btn = document.getElementById("sql-run");
+  var out = document.getElementById("sql-out");
+  var st = document.getElementById("sql-status");
+  var db = null;
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function status(html) { st.innerHTML = '<span class="pr">❯</span> ' + html; }
+
+  function render(results) {
+    if (!results.length) { out.innerHTML = ""; return 0; }
+    var r = results[results.length - 1];
+    var html = "<table><thead><tr>" + r.columns.map(function (c) { return "<th>" + esc(c) + "</th>"; }).join("") + "</tr></thead><tbody>";
+    r.values.slice(0, MAX_ROWS).forEach(function (row) {
+      html += "<tr>" + row.map(function (v) {
+        if (v === null) return '<td class="cm">NULL</td>';
+        return typeof v === "number" ? '<td class="num">' + v + "</td>" : "<td>" + esc(v) + "</td>";
+      }).join("") + "</tr>";
+    });
+    out.innerHTML = html + "</tbody></table>";
+    out.scrollTop = 0;
+    return r.values.length;
+  }
+
+  function run() {
+    if (!db) return;
+    var t0 = performance.now();
+    try {
+      var n = render(db.exec(input.value));
+      var ms = Math.max(1, Math.round(performance.now() - t0));
+      status("<b>" + n.toLocaleString() + "</b> row" + (n === 1 ? "" : "s") + (n > MAX_ROWS ? " (showing " + MAX_ROWS + ")" : "") + " · " + ms + " ms · runs in your browser");
+    } catch (e) {
+      status('<span class="err">error:</span> ' + esc(e.message));
+    }
+  }
+
+  sel.addEventListener("change", function () { input.value = PRESETS[sel.selectedIndex]; run(); });
+  btn.addEventListener("click", run);
+  input.addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") { e.preventDefault(); run(); }
+  });
+
+  if (typeof initSqlJs !== "function") { status("live SQL unavailable · showing saved result"); return; }
+  Promise.all([
+    initSqlJs({ locateFile: function (f) { return "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.12.0/" + f; } }),
+    fetch("data/nfl_games.csv").then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+  ]).then(function (parts) {
+    var SQL = parts[0], lines = parts[1].trim().split(/\r?\n/);
+    db = new SQL.Database();
+    db.run("ATTACH DATABASE ':memory:' AS nfl");
+    db.run("CREATE TABLE nfl.games (game_id TEXT, season INTEGER, week INTEGER, gameday TEXT, home_team TEXT, away_team TEXT, home_score INTEGER, away_score INTEGER, home_win INTEGER, margin INTEGER, roof TEXT, covid_season INTEGER)");
+    var ins = db.prepare("INSERT INTO nfl.games VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+    var numeric = [1, 2, 6, 7, 8, 9, 11];
+    db.run("BEGIN");
+    for (var i = 1; i < lines.length; i++) {
+      var v = lines[i].split(",");
+      numeric.forEach(function (k) { v[k] = Number(v[k]); });
+      ins.run(v);
+    }
+    db.run("COMMIT");
+    ins.free();
+    btn.disabled = false;
+    run();
+  }).catch(function () {
+    status("live SQL unavailable · showing saved result");
+  });
 })();
 </script>
 
