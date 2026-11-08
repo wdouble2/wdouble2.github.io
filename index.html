@@ -148,6 +148,11 @@ section{padding:76px 0;border-top:1px solid var(--line)}
 .log small{font:12px var(--mono);color:var(--muted)}
 .case-foot{padding:20px 32px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 .case-foot .note{font:13px var(--mono);color:var(--muted)}
+.case-fig{margin:0;padding:24px 32px;border-bottom:1px solid var(--line)}
+.case-fig img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line)}
+.case-fig figcaption{margin-top:10px;font:12px var(--mono);color:var(--muted)}
+.case ul.findings li{margin-bottom:10px}
+.case ul.findings b{color:var(--accent);font-weight:600}
 
 /* experience */
 .xp{display:grid;gap:16px}
@@ -187,7 +192,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   .wrap{padding:0 16px}
   .nav ul li:not(:last-child){display:none}
   section{padding:56px 0}
-  .case-top,.case-body > div,.case-foot{padding:22px 18px}
+  .case-top,.case-body > div,.case-foot,.case-fig{padding:22px 18px}
   .tiles{grid-template-columns:1fr}
   .tile{border-right:0;border-bottom:1px solid var(--line);padding:16px 18px}
   .tile:last-child{border-bottom:0}
@@ -281,16 +286,20 @@ FROM nfl.games;</textarea>
           <h3>Is home-field advantage real, and did it vanish when the stands were empty?</h3>
           <p class="lede">In 2020 most NFL games were played with no fans. That gives a natural experiment: if the crowd is what helps the home team, home wins should have dropped that season.</p>
         </div>
-        <!-- When finished: change this tag to <span class="tag"><span class="dot"></span>Complete</span> -->
-        <span class="tag wip"><span class="dot"></span>In progress</span>
+        <span class="tag"><span class="dot"></span>Complete</span>
       </div>
 
-      <!-- These tiles show the project's scope for now. When done, swap in the 3 headline results. -->
       <div class="tiles">
-        <div class="tile"><div class="n">11</div><div class="t">regular seasons, 2015–2025</div></div>
-        <div class="tile"><div class="n">32</div><div class="t">teams, relocations merged</div></div>
-        <div class="tile"><div class="n">2020</div><div class="t">the empty-stadium test season</div></div>
+        <div class="tile"><div class="n">55.0%</div><div class="t">home win rate in normal seasons</div></div>
+        <div class="tile"><div class="n">50.4%</div><div class="t">in 2020, with mostly empty stadiums</div></div>
+        <div class="tile"><div class="n">+26.1</div><div class="t">Miami's home boost, the NFL's biggest</div></div>
       </div>
+
+      <figure class="case-fig">
+        <a href="images/nfl-home-win-by-season.png"><img src="images/nfl-home-win-by-season.png" width="2000" height="1040" loading="lazy"
+             alt="Line chart of NFL home win percentage by season, 2015 to 2025. It ranges from 52 to 61 percent in most seasons and drops to 50.4 percent in 2020, the lowest point, before recovering to 51 to 57 percent."></a>
+        <figcaption>Tap to enlarge · 2,837 regular-season games · data: nflverse</figcaption>
+      </figure>
 
       <div class="case-body">
         <div>
@@ -299,32 +308,30 @@ FROM nfl.games;</textarea>
 
           <h4>Approach</h4>
           <ul class="plain">
-            <li>Pull every game from the nflverse schedule data with Python.</li>
-            <li>Clean it: regular season only, drop neutral sites and ties, merge relocated teams (OAK→LV, SD→LAC, STL→LA).</li>
-            <li>Load it into PostgreSQL and answer each question with its own query.</li>
-            <li>Chart the results so the finding is in the title, not just the topic.</li>
+            <li>Pulled every game from the nflverse schedule data with Python.</li>
+            <li>Cleaned it: regular season only, dropped neutral sites and ties, merged relocated teams (OAK→LV, SD→LAC, STL→LA).</li>
+            <li>Loaded it into PostgreSQL and answered each question with its own query.</li>
+            <li>Charted the results so the finding is in the title, not just the topic.</li>
           </ul>
 
           <h4>Tools</h4>
-          <div class="chips"><span class="chip">Python</span><span class="chip">pandas</span><span class="chip">PostgreSQL</span><span class="chip">nflreadpy</span><span class="chip">matplotlib</span></div>
+          <div class="chips"><span class="chip">Python</span><span class="chip">pandas</span><span class="chip">SQL</span><span class="chip">PostgreSQL</span><span class="chip">nflreadpy</span><span class="chip">matplotlib</span><span class="chip">Jupyter</span></div>
         </div>
 
         <div>
-          <h4>Build log</h4>
-          <!-- Mark a step finished with class="done"; put class="now" on the one you're working on. -->
-          <ol class="log">
-            <li class="now"><b>Pull the data</b><small>nflreadpy · 2015–2025 schedules</small></li>
-            <li><b>Clean &amp; shape</b><small>home_win, margin, covid_season columns</small></li>
-            <li><b>Load &amp; query</b><small>4 SQL queries in sql/</small></li>
-            <li><b>Charts</b><small>win % by season, team boost, 2020 vs. normal</small></li>
-            <li><b>Write-up</b><small>README with findings</small></li>
-          </ol>
+          <h4>Findings</h4>
+          <ul class="plain findings">
+            <li>Home teams won <b>54.6%</b> of 2,837 regular-season games, by <b>1.8 points</b> on average.</li>
+            <li>In 2020 that fell to <b>50.4%</b>, a coin flip and the lowest of any season, vs. <b>55.0%</b> in normal years.</li>
+            <li>It was already low in 2019 (<b>52.0%</b>), so crowds look like part of the story, not all of it.</li>
+            <li><b>Miami</b> wins 62.5% at home but 36.4% away. Seattle, famous for crowd noise, actually did slightly better on the road.</li>
+          </ul>
         </div>
       </div>
 
       <div class="case-foot">
-        <span class="note">Results and charts land here when the analysis is done.</span>
-        <a class="btn" href="https://github.com/wdouble2/nfl-home-field-advantage">Follow the build on GitHub ↗</a>
+        <span class="note">Run these queries yourself in the SQL window at the top ↑</span>
+        <a class="btn primary" href="https://github.com/wdouble2/nfl-home-field-advantage">View code on GitHub ↗</a>
       </div>
     </article>
   </div>
