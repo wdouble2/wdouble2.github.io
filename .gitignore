@@ -1,0 +1,6 @@
+.DS_Store
+.env
+.claude/
+# original resumes (golf one has a home address); only resume.pdf goes online
+WILLIAM DOUBLE*.pdf
+screenshots/

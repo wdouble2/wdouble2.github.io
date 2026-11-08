@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>William Double | Sports Data Analyst</title>
+<meta name="description" content="Data analyst breaking into sports analytics. Python, SQL and clear answers to real questions about the game.">
+<meta name="theme-color" content="#0B111C">
+
+<!-- Link previews (LinkedIn, iMessage, Slack) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="William Double | Sports Data Analyst">
+<meta property="og:description" content="Python + SQL projects on sports data. Case study: how much does home field really help NFL teams?">
+<meta property="og:image" content="images/preview.png">
+<meta property="og:url" content="https://wdouble2.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B111C'/%3E%3Cpath d='M10 9 4 16l6 7M22 9l6 7-6 7' fill='none' stroke='%23F4B544' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0B111C; --panel:#111A29; --panel-2:#0E1622; --line:#22304A;
+  --text:#E6ECF3; --muted:#93A1B6; --accent:#F4B544; --key:#7CC4FA; --ok:#3FB97A;
+  --str:#B5E48C; --cmt:#5E6E86;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r:10px; --wrap:1120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{
+  margin:0;background:var(--bg);color:var(--text);font:400 16px/1.65 var(--sans);
+  background-image:
+    linear-gradient(rgba(124,196,250,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(124,196,250,.035) 1px,transparent 1px);
+  background-size:32px 32px;background-attachment:fixed;
+}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+.mono{font-family:var(--mono)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:#000;padding:8px 12px;border-radius:6px;z-index:10}
+.skip:focus{left:8px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+/* ---------- nav ---------- */
+header.nav{position:sticky;top:0;z-index:5;background:rgba(11,17,28,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.brand{font:600 15px var(--mono);text-decoration:none;white-space:nowrap}
+.brand .cur{color:var(--accent);animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.nav ul{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.nav ul a{font:500 13px var(--mono);color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px}
+.nav ul a:hover,.nav ul a[aria-current="true"]{color:var(--text);background:var(--panel)}
+.nav ul a::before{content:"./";color:var(--cmt)}
+
+/* ---------- buttons, labels ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--mono);text-decoration:none;padding:11px 18px;border-radius:8px;border:1px solid var(--line);background:var(--panel);transition:border-color .15s,transform .15s}
+.btn:hover{border-color:var(--muted);transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#141006}
+.btn.primary:hover{background:#ffc75f}
+.label{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--key)}
+.tag{display:inline-flex;align-items:center;gap:7px;font:500 12px var(--mono);padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel-2);color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px rgba(63,185,122,.18)}
+.tag.wip{color:var(--accent);border-color:rgba(244,181,68,.35)}
+.tag.wip .dot{background:var(--accent);box-shadow:0 0 0 3px rgba(244,181,68,.18);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+
+/* ---------- hero ---------- */
+.hero{padding:88px 0 72px}
+.hero .wrap{display:grid;grid-template-columns:1fr 1.05fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(40px,6vw,62px);line-height:1.05;letter-spacing:-.02em;margin:20px 0 18px;font-weight:700}
+.hero h1 .role{display:block;font-size:.42em;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:12px}
+.hero p.pitch{font-size:18px;color:var(--muted);max-width:34em;margin:0 0 28px}
+.hero p.pitch b{color:var(--text);font-weight:600}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+
+/* terminal */
+.term{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+.term-bar{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--line);background:var(--panel)}
+.term-bar i{width:11px;height:11px;border-radius:50%;background:#2A3A55}
+.term-bar span{margin-left:8px;font:500 12px var(--mono);color:var(--muted)}
+.term pre{margin:0;padding:18px 18px 6px;font:13.5px/1.7 var(--mono);color:var(--text);overflow-x:auto}
+.kw{color:var(--key)} .fn{color:var(--accent)} .cm{color:var(--cmt)} .st{color:var(--str)} .pr{color:var(--ok)}
+.term .out{padding:4px 18px 18px;font:13px/1.6 var(--mono);overflow-x:auto}
+.hero .wrap > *,.case-body > *,.about > *,.job > *{min-width:0}
+.term table{border-collapse:collapse;width:100%;margin-top:6px}
+.term th,.term td{text-align:left;padding:6px 10px;border:1px solid var(--line);white-space:nowrap}
+.term th{color:var(--key);font-weight:500;background:var(--panel)}
+.term td{color:var(--muted)}
+.term .status{margin-top:12px;color:var(--muted)}
+.term .status b{color:var(--accent);font-weight:500}
+
+/* ---------- sections ---------- */
+section{padding:76px 0;border-top:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:34px}
+.sec-head h2{margin:0;font-size:30px;letter-spacing:-.01em}
+.sec-head .path{font:500 13px var(--mono);color:var(--cmt)}
+
+/* case study */
+.case{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.case-top{padding:30px 32px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-start}
+.case h3{margin:10px 0 8px;font-size:26px;line-height:1.25;letter-spacing:-.01em}
+.case .lede{margin:0;color:var(--muted);max-width:44em}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.tile{padding:22px 32px;border-right:1px solid var(--line)}
+.tile:last-child{border-right:0}
+.tile .n{font:600 30px var(--mono);color:var(--accent);line-height:1.1}
+.tile .t{font-size:14px;color:var(--muted);margin-top:4px}
+.case-body{display:grid;grid-template-columns:1.2fr 1fr}
+.case-body > div{padding:28px 32px}
+.case-body > div + div{border-left:1px solid var(--line);background:var(--panel-2)}
+.case h4{margin:0 0 6px;font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--key)}
+.case h4:not(:first-child){margin-top:24px}
+.case p{margin:0}
+.case-body p, .case-body li{color:#C7D1DE}
+.case ul.plain{margin:0;padding-left:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 12px var(--mono);padding:4px 10px;border-radius:6px;background:var(--panel-2);border:1px solid var(--line);color:var(--text)}
+
+/* build log */
+.log{list-style:none;margin:0;padding:0}
+.log li{position:relative;padding:0 0 18px 28px;font-size:15px}
+.log li::before{content:"";position:absolute;left:5px;top:9px;width:10px;height:10px;border-radius:50%;border:2px solid var(--line);background:var(--panel-2)}
+.log li::after{content:"";position:absolute;left:10px;top:23px;bottom:-1px;width:2px;background:var(--line)}
+.log li:last-child::after{display:none}
+.log li.done::before{background:var(--ok);border-color:var(--ok)}
+.log li.now::before{border-color:var(--accent);box-shadow:0 0 0 4px rgba(244,181,68,.15)}
+.log b{display:block;font-weight:600;color:var(--text)}
+.log small{font:12px var(--mono);color:var(--muted)}
+.case-foot{padding:20px 32px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.case-foot .note{font:13px var(--mono);color:var(--muted)}
+
+/* experience */
+.xp{display:grid;gap:16px}
+.job{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:24px 28px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+.job .when{font:500 13px var(--mono);color:var(--muted)}
+.job h3{margin:0;font-size:19px}
+.job h3 span{color:var(--muted);font-weight:500}
+.job ul{margin:10px 0 0;padding-left:18px;color:#C7D1DE}
+.job li{margin:4px 0}
+.job li b{color:var(--accent);font:600 15px var(--mono)}
+
+/* about + skills */
+.about{display:grid;grid-template-columns:200px 1fr;gap:40px;align-items:start}
+.avatar{width:200px;aspect-ratio:1;border-radius:14px;border:1px solid var(--line);background:linear-gradient(135deg,#16233A,#0E1622);display:grid;place-items:center;font:600 56px var(--mono);color:var(--accent);overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.about p{margin:0 0 16px;font-size:17px;color:#C7D1DE;max-width:40em}
+.yaml{margin-top:48px}
+.yaml pre{margin:0;padding:22px 24px;font:14px/1.85 var(--mono);overflow-x:auto}
+
+/* contact */
+.contact{text-align:center}
+.contact .big{display:inline-block;font:600 clamp(22px,4.4vw,40px) var(--mono);color:var(--accent);text-decoration:none;margin:14px 0 26px;word-break:break-all;border-bottom:2px solid transparent}
+.contact .big:hover{border-color:var(--accent)}
+.contact p{color:var(--muted);max-width:34em;margin:0 auto}
+.contact .actions{justify-content:center;margin-top:28px}
+footer{border-top:1px solid var(--line);padding:28px 0;font:13px var(--mono);color:var(--cmt)}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .hero{padding:56px 0}
+  .hero .wrap{grid-template-columns:minmax(0,1fr);gap:40px}
+  .case-body{grid-template-columns:minmax(0,1fr)}
+  .case-body > div + div{border-left:0;border-top:1px solid var(--line)}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .nav ul li:not(:last-child){display:none}
+  section{padding:56px 0}
+  .case-top,.case-body > div,.case-foot{padding:22px 18px}
+  .tiles{grid-template-columns:1fr}
+  .tile{border-right:0;border-bottom:1px solid var(--line);padding:16px 18px}
+  .tile:last-child{border-bottom:0}
+  .job{grid-template-columns:1fr;gap:6px;padding:20px 18px}
+  .about{grid-template-columns:1fr;gap:24px}
+  .avatar{width:120px;font-size:36px}
+  .term pre{font-size:12.5px;padding:14px 14px 4px}
+  .term .out{padding:4px 14px 14px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">william-double<span class="cur">_</span></a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#work">work</a></li>
+        <li><a href="#experience">experience</a></li>
+        <li><a href="#about">about</a></li>
+        <li><a href="#contact">contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<!-- ================= HERO ================= -->
+<div class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="tag"><span class="dot"></span>Open to sports analytics roles · Grand Rapids, MI</span>
+      <h1>William Double<span class="role">Data Analyst · Sports Analytics</span></h1>
+      <p class="pitch">By day I run <b>SQL databases, data pipelines and Python automation</b> as a business systems analyst. Now I'm pointing those skills at sports, turning raw game data into <b>clear answers</b> a team can act on.</p>
+      <div class="actions">
+        <a class="btn primary" href="#work">View my work →</a>
+        <a class="btn" href="resume.pdf" download>Download resume</a>
+      </div>
+    </div>
+
+    <div class="term" role="img" aria-label="Terminal window showing the SQL query behind the NFL home-field advantage project">
+      <div class="term-bar"><i></i><i></i><i></i><span>sql/01_overall.sql</span></div>
+<pre><span class="cm">-- How often does the home team win?</span>
+<span class="kw">SELECT</span>
+  <span class="fn">COUNT</span>(*)                         <span class="kw">AS</span> games,
+  <span class="fn">ROUND</span>(<span class="fn">AVG</span>(<span class="st">1.0</span> * home_win) * <span class="st">100</span>, <span class="st">1</span>) <span class="kw">AS</span> home_win_pct,
+  <span class="fn">ROUND</span>(<span class="fn">AVG</span>(margin), <span class="st">1</span>)            <span class="kw">AS</span> avg_margin
+<span class="kw">FROM</span>   nfl.games
+<span class="kw">WHERE</span>  season <span class="kw">BETWEEN</span> <span class="st">2015</span> <span class="kw">AND</span> <span class="st">2025</span>;</pre>
+      <div class="out">
+        <!-- EDIT later: replace the "running" row with the real numbers when the project is done -->
+        <table>
+          <thead><tr><th>games</th><th>home_win_pct</th><th>avg_margin</th></tr></thead>
+          <tbody><tr><td>…</td><td>…</td><td>…</td></tr></tbody>
+        </table>
+        <div class="status"><span class="pr">❯</span> status: <b>building</b>, results posting soon</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= WORK ================= -->
+<section id="work">
+  <div class="wrap">
+    <div class="sec-head"><h2>Selected work</h2><span class="path">~/projects</span></div>
+
+    <!-- To add a project: copy this whole <article class="case"> block and paste it below. -->
+    <article class="case">
+      <div class="case-top">
+        <div>
+          <span class="label">Case study · NFL</span>
+          <h3>Is home-field advantage real, and did it vanish when the stands were empty?</h3>
+          <p class="lede">In 2020 most NFL games were played with no fans. That gives a natural experiment: if the crowd is what helps the home team, home wins should have dropped that season.</p>
+        </div>
+        <!-- When finished: change this tag to <span class="tag"><span class="dot"></span>Complete</span> -->
+        <span class="tag wip"><span class="dot"></span>In progress</span>
+      </div>
+
+      <!-- These tiles show the project's scope for now. When done, swap in the 3 headline results. -->
+      <div class="tiles">
+        <div class="tile"><div class="n">11</div><div class="t">regular seasons, 2015–2025</div></div>
+        <div class="tile"><div class="n">32</div><div class="t">teams, relocations merged</div></div>
+        <div class="tile"><div class="n">2020</div><div class="t">the empty-stadium test season</div></div>
+      </div>
+
+      <div class="case-body">
+        <div>
+          <h4>The question</h4>
+          <p>How much does playing at home help NFL teams, which teams get the biggest boost, and did that edge shrink in 2020?</p>
+
+          <h4>Approach</h4>
+          <ul class="plain">
+            <li>Pull every game from the nflverse schedule data with Python.</li>
+            <li>Clean it: regular season only, drop neutral sites and ties, merge relocated teams (OAK→LV, SD→LAC, STL→LA).</li>
+            <li>Load it into PostgreSQL and answer each question with its own query.</li>
+            <li>Chart the results so the finding is in the title, not just the topic.</li>
+          </ul>
+
+          <h4>Tools</h4>
+          <div class="chips"><span class="chip">Python</span><span class="chip">pandas</span><span class="chip">PostgreSQL</span><span class="chip">nflreadpy</span><span class="chip">matplotlib</span></div>
+        </div>
+
+        <div>
+          <h4>Build log</h4>
+          <!-- Mark a step finished with class="done"; put class="now" on the one you're working on. -->
+          <ol class="log">
+            <li class="now"><b>Pull the data</b><small>nflreadpy · 2015–2025 schedules</small></li>
+            <li><b>Clean &amp; shape</b><small>home_win, margin, covid_season columns</small></li>
+            <li><b>Load &amp; query</b><small>4 SQL queries in sql/</small></li>
+            <li><b>Charts</b><small>win % by season, team boost, 2020 vs. normal</small></li>
+            <li><b>Write-up</b><small>README with findings</small></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="case-foot">
+        <span class="note">Results and charts land here when the analysis is done.</span>
+        <a class="btn" href="https://github.com/wdouble2/nfl-home-field-advantage">Follow the build on GitHub ↗</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= EXPERIENCE ================= -->
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head"><h2>Experience</h2><span class="path">~/experience</span></div>
+    <div class="xp">
+      <!-- Newest role first. Copy a <div class="job"> block to add a role. -->
+      <div class="job">
+        <div class="when">Sep 2024 — Present<br>Grand Rapids, MI</div>
+        <div>
+          <h3>Business Systems Analyst <span>· NPF Investment Advisors</span></h3>
+          <ul>
+            <li>Own the <b>firm-wide SQL database</b> and the data pipeline that feeds the firm's platforms.</li>
+            <li>Write <b>Python</b> scripts that automate routine work and make internal systems run faster.</li>
+            <li>Migrated data from legacy systems to new platforms while keeping downtime and data loss to a minimum.</li>
+            <li>Track down and fix bugs users report, so the tools people rely on keep working.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="job">
+        <div class="when">Apr 2023 — Aug 2024<br>Grand Rapids, MI</div>
+        <div>
+          <h3>Logistics Analyst <span>· Automated Logistics Systems</span></h3>
+          <ul>
+            <li>Built <b>Power BI</b> dashboards to track logistics KPIs in real time for management.</li>
+            <li>Wrote <b>SQL</b> queries on supply chain data to find cost savings and efficiency gains.</li>
+            <li>Automated Excel reports with live <b>SQL Server</b> connections, cutting manual work and errors.</li>
+            <li>Worked with IT to improve the data warehouse so logistics data was accurate and on time.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="job">
+        <div class="when">Graduated Apr 2022<br>Grand Valley State University</div>
+        <div>
+          <h3>BBA, Management Information Systems &amp; Marketing</h3>
+          <ul>
+            <li>President, Enterprise Systems Student Union. Built relationships with SAP companies such as Deloitte, PwC and Eli Lilly.</li>
+            <li>Deloitte &amp; Touche mentee (SAP). Club golf, Dean's List.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT + SKILLS ================= -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head"><h2>About</h2><span class="path">~/about</span></div>
+    <div class="about">
+      <!-- With a photo, replace WD with: <img src="images/photo.jpg" alt="William Double"> -->
+      <div class="avatar" aria-hidden="true">WD</div>
+      <div>
+        <p>I'm a business systems analyst in Grand Rapids with 3+ years in financial services and logistics. I manage SQL databases, build data pipelines and write Python that takes manual work off people's plates. I like questions that have a real answer hiding in the data.</p>
+        <p>Sports is where I want to point that. I grew up competing as an MHSAA All-State golfer and played club golf at Grand Valley, so I know how much the small edges matter. I'm building a portfolio of projects on public sports data, each one a real question answered start to finish in Python and SQL.</p>
+      </div>
+    </div>
+
+    <div class="term yaml">
+      <div class="term-bar"><i></i><i></i><i></i><span>skills.yaml</span></div>
+<pre><span class="kw">languages</span>:   [<span class="st">Python</span>, <span class="st">SQL</span>, <span class="st">R</span>, <span class="st">VBA</span>]
+<span class="kw">databases</span>:   [<span class="st">SQL Server</span>, <span class="st">PostgreSQL</span>]
+<span class="kw">data_work</span>:   [<span class="st">pipelines</span>, <span class="st">data migration</span>, <span class="st">automation</span>]
+<span class="kw">bi</span>:          [<span class="st">Power BI</span>, <span class="st">Excel</span>]
+<span class="kw">erp</span>:         [<span class="st">SAP S/4HANA</span>, <span class="st">SAP BW/4HANA</span>]
+<span class="kw">learning</span>:    [<span class="st">pandas</span>, <span class="st">matplotlib</span>, <span class="st">nflverse</span>]</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <span class="label">./contact</span>
+    <div><a class="big" href="mailto:willdouble22@gmail.com">willdouble22@gmail.com</a></div>
+    <p>Looking for analyst, data science or data engineering roles with a sports team. Questions about a project or feedback welcome too.</p>
+    <div class="actions">
+      <a class="btn" href="https://www.linkedin.com/in/williamdouble91097/">LinkedIn ↗</a>
+      <a class="btn" href="https://github.com/wdouble2">GitHub ↗</a>
+      <a class="btn" href="resume.pdf" download>Resume ↓</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr">2026</span> William Double</span>
+    <span>built by hand · hosted on GitHub Pages</span>
+  </div>
+</footer>
+
+<script>
+document.getElementById("yr").textContent = new Date().getFullYear();
+// Highlight the nav link for the section on screen.
+(function () {
+  var links = document.querySelectorAll('.nav ul a');
+  if (!("IntersectionObserver" in window)) return;
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (a) { a.setAttribute("aria-current", a.getAttribute("href") === "#" + e.target.id ? "true" : "false"); });
+    });
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  document.querySelectorAll("section[id]").forEach(function (s) { io.observe(s); });
+})();
+</script>
+
+<!-- Visitor tracking (GoatCounter, free, no cookies). After you sign up at goatcounter.com,
+     replace YOUR-CODE and remove the two comment lines around the script.
+<script data-goatcounter="https://YOUR-CODE.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+-->
+</body>
+</html>
