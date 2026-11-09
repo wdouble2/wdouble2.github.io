@@ -502,7 +502,7 @@ FROM nfl.games;</textarea>
         <div>
           <span class="label">Case study · NFL · 1999–2025</span>
           <h3>How much is NFL home field really worth, and did it vanish when the stands were empty?</h3>
-          <p class="lede">27 seasons, 6,878 games, Vegas lines and 11 years of play-by-play penalties. I removed team strength with a rating model to measure home field in points, then tested when it grows, when it shrinks, and why it exists.</p>
+          <p class="lede">27 seasons, 6,878 games and 11 years of play-by-play penalties. I removed team strength with a rating model to measure home field in points, then tested when it grows, when it shrinks, and why it exists.</p>
         </div>
         <span class="tag"><span class="dot"></span>Complete · v2</span>
       </div>
@@ -515,15 +515,15 @@ FROM nfl.games;</textarea>
 
       <figure class="case-fig">
         <div class="fig-head">
-          <div><h4>Home edge by season · team-strength adjusted</h4><p class="title">Home field is worth ~2 points, vanished in 2020, and Vegas now prices it lower</p></div>
+          <div><h4>Home edge by season · team-strength adjusted</h4><p class="title">Home field is worth ~2 points, is slowly shrinking, and vanished in 2020</p></div>
           <span class="label">hover or tap a season</span>
         </div>
-        <div class="chart" id="chart" role="img" aria-label="Chart of the NFL home edge in points by season, 1999 to 2025, after removing team strength, with 95% confidence intervals and the Vegas-implied home edge. Most seasons are between 1.5 and 3.5 points. 2019 and 2020 are near zero. The Vegas line falls from about 2.5 points in the 2000s to about 1.6 points since 2021, with a low of 1.1 in 2020.">
-          <img src="images/nfl-adjusted-hfa-vs-vegas.png" width="2200" height="1080" loading="lazy" alt="">
+        <div class="chart" id="chart" role="img" aria-label="Chart of the NFL home edge in points by season, 1999 to 2025, after removing team strength, with 95% confidence intervals and era averages. Most seasons are between 1.5 and 3.5 points. 2019 and 2020 are near zero. The era average falls from 2.6 points in 1999 to 2009, to 2.2 in 2010 to 2019, to 2.0 since 2021.">
+          <img src="images/nfl-adjusted-hfa-by-season.png" width="2200" height="1080" loading="lazy" alt="">
         </div>
         <div class="fig-foot">
-          <span class="legend"><span class="key dotk"></span>actual home edge, 95% CI <span class="key hlk"></span>2020 <span class="key mk"></span>Vegas-implied</span>
-          <a href="images/nfl-adjusted-hfa-vs-vegas.png">Download chart (PNG)</a>
+          <span class="legend"><span class="key dotk"></span>actual home edge, 95% CI <span class="key hlk"></span>2020 <span class="key mk"></span>era average</span>
+          <a href="images/nfl-adjusted-hfa-by-season.png">Download chart (PNG)</a>
         </div>
       </figure>
 
@@ -534,9 +534,9 @@ FROM nfl.games;</textarea>
 
           <h4>Approach</h4>
           <ul class="plain">
-            <li>Pulled 27 seasons of schedules (scores, Vegas spreads, rest, roof, weather, kickoff) and 2015–2025 play-by-play with Python (nflverse).</li>
+            <li>Pulled 27 seasons of schedules (scores, rest, roof, weather, kickoff) and 2015–2025 play-by-play with Python (nflverse).</li>
             <li>Cleaned it: regular season only; dropped neutral sites, ties and "home" games at borrowed stadiums (2005 Saints, Bills in Toronto); merged relocated teams.</li>
-            <li>Built a least-squares rating model, <code>margin = HFA + rating[home] − rating[away]</code>, per season, and fit the same model to the point spread for the market's view.</li>
+            <li>Built a least-squares rating model, <code>margin = HFA + rating[home] − rating[away]</code>, fit separately for each season.</li>
             <li>Tested it properly: confidence intervals, significance tests, multiple-testing correction, shrinkage and a split-half check for team effects.</li>
             <li>Version 1 (4 SQL queries in PostgreSQL) is still in the repo and runs live in the SQL window above.</li>
           </ul>
@@ -548,9 +548,8 @@ FROM nfl.games;</textarea>
         <div>
           <h4>Findings</h4>
           <ul class="plain findings">
-            <li>Home field is worth about <b>2.3 points</b> and slowly shrinking: ~2.6 in 1999–2009, ~2.0 since 2021.</li>
+            <li>Home field is worth about <b>2.3 points</b> and slowly shrinking: ~2.6 in 1999–2009, ~2.2 in 2010–2019, ~2.0 since 2021.</li>
             <li><b>2020 really was different:</b> +0.1 pts vs. +2.2 in other seasons (p = 0.006). Raw win % alone couldn't prove it (p = 0.16); removing team strength could.</li>
-            <li><b>Vegas learned in real time,</b> cutting home field from 1.7 to 0.3 pts mid-2020, and has priced it lower ever since.</li>
             <li><b>Rest matters most:</b> each extra day is worth ~0.2 pts. Cold weather, domes, primetime, altitude and West-coast trips showed no reliable effect.</li>
             <li><b>It's not the refs:</b> visitors draw ~0.35 more flags a game, and that gap was unchanged with empty stands.</li>
             <li><b>Team "fortresses" are mostly noise:</b> no team has a provably bigger home edge, and a team's edge in one era doesn't predict the next (r = −0.11).</li>
@@ -804,20 +803,22 @@ document.getElementById("yr").textContent = new Date().getFullYear();
 })();
 </script>
 
-<!-- Interactive chart: strength-adjusted home edge by season vs. Vegas (from deep_dive.ipynb). -->
+<!-- Interactive chart: strength-adjusted home edge by season with era averages (from deep_dive.ipynb). -->
 <script>
 (function () {
-  // [season, home edge (pts), 95% CI low, 95% CI high, Vegas-implied edge, games]
+  // [season, home edge (pts), 95% CI low, 95% CI high, games]
+  var ERAS = [[1999, 2009, 2.58], [2010, 2019, 2.21], [2021, 2025, 2.03]];   // inverse-variance-weighted era averages
+  function eraOf(s) { for (var k = 0; k < ERAS.length; k++) if (s >= ERAS[k][0] && s <= ERAS[k][1]) return ERAS[k][2]; return null; }
   var DATA = [
-    [1999, 3.06, 1.59, 4.54, 2.36, 248], [2000, 2.82, 1.32, 4.33, 2.57, 248], [2001, 2.01, 0.47, 3.54, 2.26, 248],
-    [2002, 2.25, 0.70, 3.79, 2.19, 255], [2003, 3.60, 1.97, 5.23, 2.46, 255], [2004, 2.51, 1.01, 4.00, 2.52, 256],
-    [2005, 3.53, 1.99, 5.08, 2.53, 251], [2006, 0.85, -0.74, 2.43, 2.88, 256], [2007, 2.84, 1.30, 4.39, 2.46, 255],
-    [2008, 2.55, 0.92, 4.17, 2.71, 253], [2009, 2.26, 0.55, 3.97, 2.60, 254], [2010, 2.05, 0.42, 3.69, 2.47, 252],
-    [2011, 3.17, 1.56, 4.77, 2.44, 254], [2012, 2.68, 1.07, 4.28, 2.34, 253], [2013, 3.19, 1.73, 4.64, 2.49, 252],
-    [2014, 2.48, 0.74, 4.22, 2.34, 251], [2015, 1.44, -0.05, 2.93, 2.21, 253], [2016, 2.55, 1.14, 3.96, 2.13, 251],
-    [2017, 2.36, 0.79, 3.92, 2.01, 251], [2018, 2.28, 0.70, 3.86, 2.38, 251], [2019, -0.05, -1.60, 1.50, 1.79, 250],
-    [2020, 0.13, -1.40, 1.65, 1.08, 252], [2021, 1.56, -0.04, 3.16, 1.75, 268], [2022, 2.18, 0.82, 3.54, 1.76, 263],
-    [2023, 2.59, 1.04, 4.15, 1.62, 267], [2024, 1.66, 0.20, 3.11, 1.54, 267], [2025, 2.15, 0.69, 3.60, 1.56, 264]
+    [1999, 3.06, 1.59, 4.54, 248], [2000, 2.82, 1.32, 4.33, 248], [2001, 2.01, 0.47, 3.54, 248],
+    [2002, 2.25, 0.70, 3.79, 255], [2003, 3.60, 1.97, 5.23, 255], [2004, 2.51, 1.01, 4.00, 256],
+    [2005, 3.53, 1.99, 5.08, 251], [2006, 0.85, -0.74, 2.43, 256], [2007, 2.84, 1.30, 4.39, 255],
+    [2008, 2.55, 0.92, 4.17, 253], [2009, 2.26, 0.55, 3.97, 254], [2010, 2.05, 0.42, 3.69, 252],
+    [2011, 3.17, 1.56, 4.77, 254], [2012, 2.68, 1.07, 4.28, 253], [2013, 3.19, 1.73, 4.64, 252],
+    [2014, 2.48, 0.74, 4.22, 251], [2015, 1.44, -0.05, 2.93, 253], [2016, 2.55, 1.14, 3.96, 251],
+    [2017, 2.36, 0.79, 3.92, 251], [2018, 2.28, 0.70, 3.86, 251], [2019, -0.05, -1.60, 1.50, 250],
+    [2020, 0.13, -1.40, 1.65, 252], [2021, 1.56, -0.04, 3.16, 268], [2022, 2.18, 0.82, 3.54, 263],
+    [2023, 2.59, 1.04, 4.15, 267], [2024, 1.66, 0.20, 3.11, 267], [2025, 2.15, 0.69, 3.60, 264]
   ];
   var HL = 2020, Y0 = -2, Y1 = 6, TICKS = [-2, 0, 2, 4, 6];
   var box = document.getElementById("chart");
@@ -858,7 +859,11 @@ document.getElementById("yr").textContent = new Date().getFullYear();
 
     var cross = el("line", { class: "cross", y1: m.t, y2: m.t + ih, opacity: 0 }, svg);
     var cis = DATA.map(function (d, i) { return el("line", { class: "ci" + (d[0] === HL ? " hl" : ""), x1: x(i), x2: x(i), y1: y(d[2]), y2: y(d[3]) }, svg); });
-    var mk = DATA.map(function (d, i) { return (i ? "L" : "M") + x(i).toFixed(1) + " " + y(d[4]).toFixed(1); }).join(" ");
+    var mk = DATA.map(function (d, i) {   // flat era-average segments, broken at 2020
+      var e = eraOf(d[0]); if (e == null) return "";
+      var start = i === 0 || eraOf(DATA[i - 1][0]) !== e;
+      return (start ? "M" + (x(i) - 6).toFixed(1) : "L" + x(i).toFixed(1)) + " " + y(e).toFixed(1) + (i === DATA.length - 1 || eraOf(DATA[i + 1][0]) !== e ? " L" + (x(i) + 6).toFixed(1) + " " + y(e).toFixed(1) : "");
+    }).join(" ");
     var mline = el("path", { class: "mkt", d: mk }, svg);
     var focus = el("circle", { class: "focus", r: 11, opacity: 0 }, svg);
     var dots = DATA.map(function (d, i) { return el("circle", { class: "pt" + (d[0] === HL ? " hl" : ""), cx: x(i), cy: y(d[1]), r: d[0] === HL ? 6 : 4 }, svg); });
@@ -891,8 +896,8 @@ document.getElementById("yr").textContent = new Date().getFullYear();
       focus.setAttribute("cx", px); focus.setAttribute("cy", py); focus.setAttribute("opacity", 1);
       tip.innerHTML = "<b>" + d[0] + (d[0] === HL ? " · few fans" : "") + "</b><div class='big'>" + f(d[1]) + " pts</div>" +
         "<div class='row'><span>95% CI</span><span>" + f(d[2]) + " to " + f(d[3]) + "</span></div>" +
-        "<div class='row'><span>Vegas-implied</span><span>" + f(d[4]) + "</span></div>" +
-        "<div class='row'><span>games</span><span>" + d[5] + "</span></div>";
+        (eraOf(d[0]) != null ? "<div class='row'><span>era average</span><span>" + f(eraOf(d[0])) + "</span></div>" : "") +
+        "<div class='row'><span>games</span><span>" + d[4] + "</span></div>";
       var tw = tip.offsetWidth, th = tip.offsetHeight, left = px + 16;
       if (left + tw > W) left = px - tw - 16;
       tip.style.left = Math.max(0, left) + "px"; tip.style.top = Math.max(0, Math.min(H - th, py - th / 2)) + "px"; tip.classList.add("on");
