@@ -222,6 +222,59 @@ section{padding:120px 0;position:relative}
 .fig-foot a{color:var(--muted);text-underline-offset:3px}
 .fig-foot a:hover{color:var(--text)}
 
+/* team explorer */
+.explorer{margin-top:28px}
+.ex-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;padding:0 44px 30px}
+.sel{position:relative;display:flex;flex-direction:column;gap:7px;font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.sel::after{content:"";position:absolute;right:17px;bottom:19px;width:7px;height:7px;border-right:1.5px solid var(--text);border-bottom:1.5px solid var(--text);transform:rotate(45deg);pointer-events:none}
+.sel select{appearance:none;-webkit-appearance:none;font:500 15px var(--sans);letter-spacing:-.01em;text-transform:none;color:var(--text);background:var(--panel-2);border:1px solid var(--line-2);border-radius:999px;padding:12px 44px 12px 18px;min-width:250px;cursor:pointer;transition:border-color .25s,background .25s}
+.sel select:hover{border-color:var(--text)}
+.swap{width:46px;height:46px;border-radius:999px;border:1px solid var(--line-2);background:var(--bg);color:var(--text);font-size:18px;cursor:pointer;transition:transform .45s var(--ease),border-color .25s}
+.swap:hover{border-color:var(--text);transform:rotate(180deg)}
+.swap:disabled{opacity:.35;cursor:default;transform:none}
+.ex-tiles{grid-template-columns:repeat(4,1fr)}
+.ex-tiles .n{font-size:clamp(24px,2.7vw,34px);white-space:nowrap}
+.ex-chart svg,.ex-strip svg{animation:exin .5s var(--ease)}
+@keyframes exin{from{opacity:0;transform:translateY(6px)}}
+.ex-tiles .n small{font-size:.45em;font-weight:500;color:var(--muted);letter-spacing:-.01em;margin-left:6px}
+.ex-tiles .tile,.ex-h2h,.ex-panel{transition:opacity .35s var(--ease)}
+.ex-grid{display:grid;grid-template-columns:1fr 1fr}
+.ex-panel{margin:0;padding:32px 44px 28px;min-width:0}
+.ex-grid .ex-panel + .ex-panel{border-left:1px solid var(--line)}
+.ex-wide{border-top:1px solid var(--line)}
+.ex-panel .title{font:600 18px var(--sans);letter-spacing:-.025em;margin:4px 0 12px;min-height:1.4em}
+.ex-chart{height:250px}
+.ex-strip{height:250px}
+.ex-verdict{margin:14px 0 0;color:var(--body-2);font-size:15px;max-width:60em}
+.ex-verdict b{color:var(--text)}
+.ex-h2h{padding:32px 44px;border-bottom:1px solid var(--line);background:var(--panel)}
+.ex-h2h .title{font:600 20px var(--sans);letter-spacing:-.03em;margin:4px 0 18px}
+.h2h-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:32px}
+.h2h-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.h2h-stats div{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}
+.h2h-stats b{display:block;font:600 24px var(--sans);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.h2h-stats span{font-size:13px;color:var(--muted)}
+.meets{list-style:none;margin:10px 0 0;padding:0}
+.meets li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font:13px var(--mono);color:var(--muted)}
+.meets li:last-child{border-bottom:0}
+.meets b{color:var(--text);font-weight:600}
+.chart .bar{fill:var(--text);transition:opacity .2s}
+.chart .bar.neg{fill:var(--muted)}
+.chart .bar.dim{opacity:.35}
+.chart .l2{fill:none;stroke:var(--muted);stroke-width:2;stroke-dasharray:5 4;stroke-linejoin:round}
+.chart .p2{fill:var(--bg);stroke:var(--muted);stroke-width:1.75}
+.chart .sdot{fill:var(--muted);opacity:.55;transition:opacity .2s}
+.chart .sci{stroke:var(--muted);stroke-opacity:.35;stroke-width:3;stroke-linecap:round}
+.chart .sdot.on,.chart .sdot.on2{opacity:1}
+.chart .sdot.on{fill:var(--text)}
+.chart .sci.on{stroke:var(--text);stroke-opacity:.8}
+.chart .sci.on2{stroke:var(--text);stroke-opacity:.45}
+.chart .sdot.on2{fill:var(--bg);stroke:var(--text);stroke-width:2}
+.chart .slab{font:600 11px var(--mono);fill:var(--text)}
+.chart .hit{fill:transparent;cursor:pointer}
+.legend .dash{width:16px;height:0;border-top:2px dashed var(--muted)}
+.legend .barl{width:10px;height:10px;border-radius:2px;background:var(--text)}
+
 /* experience */
 .xp{display:grid;gap:14px}
 .job{display:grid;grid-template-columns:210px 1fr;gap:28px;padding:30px 34px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);transition:border-color .4s var(--ease),transform .5s var(--ease),box-shadow .5s var(--ease)}
@@ -306,6 +359,8 @@ html.theme-anim,html.theme-anim *,html.theme-anim *::before,html.theme-anim *::a
 
 /* ---------- responsive ---------- */
 @media (max-width:900px){
+  .ex-grid{grid-template-columns:1fr}
+  .ex-grid .ex-panel + .ex-panel{border-left:0;border-top:1px solid var(--line)}
   .hero{padding:128px 0 72px}
   .hero .wrap{grid-template-columns:minmax(0,1fr);gap:48px}
   .case-body{grid-template-columns:minmax(0,1fr)}
@@ -328,6 +383,18 @@ html.theme-anim,html.theme-anim *,html.theme-anim *::before,html.theme-anim *::a
   .tile{border-right:0;border-bottom:1px solid var(--line);padding:20px 18px}
   .tile:last-child{border-bottom:0}
   .chart{height:250px}
+  .ex-controls{padding:0 18px 22px}
+  .sel,.sel select{width:100%;min-width:0}
+  .ex-controls .sel{flex:1 1 100%}
+  .swap{order:3}
+  .ex-grid{grid-template-columns:1fr}
+  .ex-grid .ex-panel + .ex-panel{border-left:0;border-top:1px solid var(--line)}
+  .ex-panel,.ex-h2h{padding:24px 18px}
+  .h2h-grid{grid-template-columns:1fr;gap:20px}
+  .h2h-stats{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .h2h-stats b{font-size:19px}
+  .ex-tiles{grid-template-columns:1fr 1fr}
+  .ex-tiles .tile:nth-child(odd){border-right:1px solid var(--line)}
   .job{grid-template-columns:1fr;gap:8px;padding:22px 18px}
   .about{grid-template-columns:1fr;gap:24px}
   .avatar{width:120px;font-size:40px;border-radius:18px}
@@ -495,6 +562,55 @@ FROM nfl.games;</textarea>
         <span class="note">Full write-up, notebook and charts on GitHub · v1 queries live in the <a href="#sqlbox">SQL window</a> ↑</span>
         <a class="btn primary" href="https://github.com/wdouble2/nfl-home-field-advantage">View code on GitHub <span class="arr up">↗</span></a>
       </div>
+    </article>
+
+    <!-- Team explorer: data/teams.json is built by build_site_data.py in the NFL repo. -->
+    <article class="case explorer spot" id="explorer" data-reveal>
+      <div class="case-top">
+        <div>
+          <span class="label">Interactive · Team explorer · 1999–2025</span>
+          <h3>Pick a team. How good were they, how did they do at home vs. on the road, and is their home field actually special?</h3>
+        </div>
+      </div>
+      <div class="ex-controls">
+        <label class="sel"><span>Team</span><select id="ex-team" aria-label="Team"></select></label>
+        <button class="swap" id="ex-swap" type="button" aria-label="Swap the two teams" title="Swap teams">⇄</button>
+        <label class="sel"><span>Compare with</span><select id="ex-vs" aria-label="Compare with"><option value="">None</option></select></label>
+      </div>
+      <div class="tiles ex-tiles" id="ex-tiles" aria-live="polite"></div>
+
+      <div class="ex-h2h" id="ex-h2h" hidden>
+        <h4>Head to head</h4>
+        <p class="title" id="ex-h2h-title"></p>
+        <div class="h2h-grid">
+          <div class="h2h-stats" id="ex-h2h-stats"></div>
+          <div><span class="label">Last 5 meetings</span><ul class="meets" id="ex-meets"></ul></div>
+        </div>
+      </div>
+
+      <div class="ex-grid">
+        <figure class="ex-panel">
+          <h4>How good were they?</h4>
+          <p class="title" id="ex-t1"></p>
+          <div class="chart ex-chart" id="ex-rating"></div>
+          <div class="fig-foot"><span class="legend" id="ex-leg1"></span><span>points vs. an average team, home field removed</span></div>
+        </figure>
+        <figure class="ex-panel">
+          <h4>Home vs. road</h4>
+          <p class="title" id="ex-t2"></p>
+          <div class="chart ex-chart" id="ex-homeroad"></div>
+          <div class="fig-foot"><span class="legend" id="ex-leg2"></span><span>8 games a side per season, so expect big swings</span></div>
+        </figure>
+      </div>
+
+      <figure class="ex-panel ex-wide">
+        <div class="fig-head">
+          <div><h4>Is their home field special?</h4><p class="title">Extra home boost vs. an average home field, all 32 teams</p></div>
+          <span class="label">tap a team to select it</span>
+        </div>
+        <div class="chart ex-strip" id="ex-strip"></div>
+        <p class="ex-verdict" id="ex-verdict"></p>
+      </figure>
     </article>
   </div>
 </section>
@@ -796,6 +912,228 @@ document.getElementById("yr").textContent = new Date().getFullYear();
   build();
   var lastW = box.clientWidth;
   if ("ResizeObserver" in window) new ResizeObserver(function () { if (box.clientWidth !== lastW) { lastW = box.clientWidth; build(); } }).observe(box);
+})();
+</script>
+
+<!-- Team explorer (see the "explorer" block in Work). -->
+<script>
+(function () {
+  var root = document.getElementById("explorer");
+  if (!root || !window.fetch) return;
+  var selA = document.getElementById("ex-team"), selB = document.getElementById("ex-vs"), swap = document.getElementById("ex-swap");
+  var boxR = document.getElementById("ex-rating"), boxH = document.getElementById("ex-homeroad"), boxS = document.getElementById("ex-strip");
+  var NS = "http://www.w3.org/2000/svg", D = null, A = "DET", B = "";
+
+  function el(n, at, p) { var e = document.createElementNS(NS, n); for (var k in at) e.setAttribute(k, at[k]); if (p) p.appendChild(e); return e; }
+  function f1(v) { var r = Math.round(v * 10) / 10; return (r > 0 ? "+" : r < 0 ? "−" : "") + Math.abs(r).toFixed(1); }
+  function pct(w, l) { return w + l ? Math.round(100 * w / (w + l)) : 0; }
+  function nick(t) { var n = D.teams[t].name.split(" "); return n[n.length - 1]; }
+  function rec(w, l) { return w + "–" + l; }
+  function $(id) { return document.getElementById(id); }
+
+  // Generic season chart: grid, axis, crosshair + tooltip; `draw` adds the marks.
+  function seasonChart(box, o) {
+    var W = box.clientWidth, H = box.clientHeight, narrow = W < 460;
+    if (W < 80 || H < 80) return;   // not laid out yet; the resize observer redraws later
+    var m = { l: 38, r: 8, t: 10, b: 26 }, iw = W - m.l - m.r, ih = H - m.t - m.b, n = o.labels.length;
+    var x = function (i) { return m.l + iw * (i + 0.5) / n; }, bw = iw / n;
+    var y = function (v) { return m.t + ih * (1 - (v - o.min) / (o.max - o.min)); };
+    box.innerHTML = "";
+    var svg = el("svg", { viewBox: "0 0 " + W + " " + H, "aria-hidden": "true" }, box);
+    var gr = el("g", { class: "grid axis" }, svg);
+    o.ticks.forEach(function (t) {
+      el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t) }, gr);
+      el("text", { x: m.l - 7, y: y(t) + 4, "text-anchor": "end" }, gr).textContent = o.fmt(t);
+    });
+    el("line", { class: "ref", x1: m.l, x2: W - m.r, y1: y(o.ref), y2: y(o.ref) }, svg);
+    var ax = el("g", { class: "axis" }, svg), step = narrow ? 6 : 4;
+    o.labels.forEach(function (L, i) { if (i % step === 0) el("text", { x: x(i), y: H - 7, "text-anchor": "middle" }, ax).textContent = narrow ? "'" + String(L).slice(2) : L; });
+    var cross = el("line", { class: "cross", y1: m.t, y2: m.t + ih, opacity: 0 }, svg);
+    o.draw(svg, x, y, bw);
+    var tip = document.createElement("div"); tip.className = "tip"; tip.setAttribute("aria-hidden", "true"); box.appendChild(tip);
+    function show(i) {
+      var px = x(i), html = o.tip(i); if (!html) { hide(); return; }
+      cross.setAttribute("x1", px); cross.setAttribute("x2", px); cross.setAttribute("opacity", 1);
+      tip.innerHTML = html;
+      var tw = tip.offsetWidth, th = tip.offsetHeight, left = px + 14; if (left + tw > W) left = px - tw - 14;
+      tip.style.left = Math.max(0, left) + "px"; tip.style.top = Math.max(0, (H - th) / 2 - 12) + "px"; tip.classList.add("on");
+    }
+    function hide() { tip.classList.remove("on"); cross.setAttribute("opacity", 0); }
+    function idx(cx) { var r = box.getBoundingClientRect(); return Math.max(0, Math.min(n - 1, Math.floor((cx - r.left - m.l) / iw * n))); }
+    box.onpointermove = function (e) { show(idx(e.clientX)); };
+    box.onpointerdown = function (e) { show(idx(e.clientX)); };
+    box.onpointerleave = function (e) { if (e.pointerType === "mouse") hide(); };
+  }
+
+  function path(vals, x, y) {
+    var d = "", pen = false;
+    vals.forEach(function (v, i) { if (v == null) { pen = false; return; } d += (pen ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1) + " "; pen = true; });
+    return d;
+  }
+
+  function drawRating() {
+    var ta = D.teams[A], tb = B ? D.teams[B] : null, sa = ta.seasons, labels = sa.map(function (r) { return r[0]; });
+    var va = sa.map(function (r) { return r[1]; }), vb = tb ? tb.seasons.map(function (r) { return r[1]; }) : [];
+    var big = Math.max.apply(null, va.concat(vb).filter(function (v) { return v != null; }).map(Math.abs));
+    var lim = Math.max(10, Math.ceil(big / 5) * 5);
+    seasonChart(boxR, {
+      labels: labels, min: -lim, max: lim, ref: 0, ticks: [-lim, -lim / 2, 0, lim / 2, lim],
+      fmt: function (v) { return (v > 0 ? "+" : "") + v; },
+      draw: function (svg, x, y, bw) {
+        if (!tb) {
+          va.forEach(function (v, i) {
+            if (v == null) return;
+            el("rect", { class: "bar" + (v < 0 ? " neg" : ""), x: x(i) - bw * 0.34, width: bw * 0.68, y: Math.min(y(0), y(v)), height: Math.max(1.5, Math.abs(y(v) - y(0))), rx: 2 }, svg);
+          });
+        } else {
+          el("path", { class: "l2", d: path(vb, x, y) }, svg);
+          vb.forEach(function (v, i) { if (v != null) el("circle", { class: "p2", cx: x(i), cy: y(v), r: 3 }, svg); });
+          el("path", { class: "line", d: path(va, x, y) }, svg);
+          va.forEach(function (v, i) { if (v != null) el("circle", { class: "pt", cx: x(i), cy: y(v), r: 3.5 }, svg); });
+        }
+      },
+      tip: function (i) {
+        var r = sa[i]; if (r[1] == null && !(tb && tb.seasons[i][1] != null)) return "";
+        var h = "<b>" + r[0] + "</b>";
+        if (r[1] != null) h += "<div class='big'>" + f1(r[1]) + " pts</div><div class='row'><span>" + nick(A) + " record</span><span>" + rec(r[2] + r[4], r[3] + r[5]) + "</span></div>";
+        if (tb) { var q = tb.seasons[i]; if (q[1] != null) h += "<div class='row'><span>" + nick(B) + "</span><span>" + f1(q[1]) + " · " + rec(q[2] + q[4], q[3] + q[5]) + "</span></div>"; }
+        return h;
+      }
+    });
+    if (tb) {
+      var both = va.map(function (v, i) { return v != null && vb[i] != null ? [v, vb[i]] : null; }).filter(Boolean);
+      var aBetter = both.filter(function (p) { return p[0] > p[1]; }).length;
+      $("ex-t1").textContent = "The " + nick(A) + " were the stronger team in " + aBetter + " of " + both.length + " seasons";
+      $("ex-leg1").innerHTML = "<span class='key dotk'></span>" + nick(A) + " <span class='key dash'></span>" + nick(B);
+    } else {
+      var played = va.filter(function (v) { return v != null; }), above = played.filter(function (v) { return v > 0; }).length;
+      $("ex-t1").textContent = "Above average in " + above + " of " + played.length + " seasons · best: " + ta.best[0] + " (" + f1(ta.best[1]) + ")";
+      $("ex-leg1").innerHTML = "<span class='key barl'></span>" + nick(A) + " team rating";
+    }
+  }
+
+  function drawHomeRoad() {
+    var ta = D.teams[A], sa = ta.seasons, labels = sa.map(function (r) { return r[0]; });
+    var hp = sa.map(function (r) { return r[2] + r[3] ? 100 * r[2] / (r[2] + r[3]) : null; });
+    var rp = sa.map(function (r) { return r[4] + r[5] ? 100 * r[4] / (r[4] + r[5]) : null; });
+    seasonChart(boxH, {
+      labels: labels, min: 0, max: 100, ref: 50, ticks: [0, 25, 50, 75, 100], fmt: function (v) { return v + "%"; },
+      draw: function (svg, x, y) {
+        el("path", { class: "l2", d: path(rp, x, y) }, svg);
+        rp.forEach(function (v, i) { if (v != null) el("circle", { class: "p2", cx: x(i), cy: y(v), r: 3 }, svg); });
+        el("path", { class: "line", d: path(hp, x, y) }, svg);
+        hp.forEach(function (v, i) { if (v != null) el("circle", { class: "pt", cx: x(i), cy: y(v), r: 3.5 }, svg); });
+      },
+      tip: function (i) {
+        var r = sa[i]; if (!(r[2] + r[3])) return "";
+        return "<b>" + r[0] + " · " + nick(A) + "</b><div class='big'>" + pct(r[2], r[3]) + "% home</div>" +
+          "<div class='row'><span>home</span><span>" + rec(r[2], r[3]) + (r[6] != null ? " · " + f1(r[6]) : "") + "</span></div>" +
+          "<div class='row'><span>road</span><span>" + rec(r[4], r[5]) + " (" + pct(r[4], r[5]) + "%)" + (r[7] != null ? " · " + f1(r[7]) : "") + "</span></div>";
+      }
+    });
+    var h = pct(ta.home[0], ta.home[1]), r = pct(ta.road[0], ta.road[1]);
+    $("ex-t2").textContent = "Won " + h + "% at home vs. " + r + "% on the road (" + (h - r >= 0 ? "+" : "") + (h - r) + " pts)";
+    $("ex-leg2").innerHTML = "<span class='key dotk'></span>home <span class='key dash'></span>road";
+  }
+
+  function drawStrip() {
+    var codes = Object.keys(D.teams).sort(function (a, b) { return D.teams[b].boost - D.teams[a].boost; });
+    var W = boxS.clientWidth, H = boxS.clientHeight, narrow = W < 560;
+    if (W < 80 || H < 80) return;
+    var m = { l: 34, r: 6, t: 20, b: narrow ? 10 : 26 }, iw = W - m.l - m.r, ih = H - m.t - m.b, n = codes.length;
+    var lim = Math.ceil(Math.max.apply(null, codes.map(function (c) { return Math.max(Math.abs(D.teams[c].boost_lo), Math.abs(D.teams[c].boost_hi)); })));
+    var x = function (i) { return m.l + iw * (i + 0.5) / n; }, y = function (v) { return m.t + ih * (1 - (v + lim) / (2 * lim)); };
+    boxS.innerHTML = "";
+    var svg = el("svg", { viewBox: "0 0 " + W + " " + H, "aria-hidden": "true" }, boxS);
+    var gr = el("g", { class: "grid axis" }, svg);
+    [-lim, -lim / 2, 0, lim / 2, lim].forEach(function (t) {
+      el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t) }, gr);
+      el("text", { x: m.l - 7, y: y(t) + 4, "text-anchor": "end" }, gr).textContent = (t > 0 ? "+" : "") + t;
+    });
+    el("line", { class: "ref", x1: m.l, x2: W - m.r, y1: y(0), y2: y(0) }, svg);
+    var ax = el("g", { class: "axis" }, svg);
+    codes.forEach(function (c, i) {
+      var t = D.teams[c], on = c === A ? " on" : c === B ? " on2" : "";
+      el("line", { class: "sci" + on, x1: x(i), x2: x(i), y1: y(t.boost_lo), y2: y(t.boost_hi) }, svg);
+      if (!narrow || on) el("text", { x: x(i), y: H - 8, "text-anchor": "middle", class: on ? "slab" : "" }, ax).textContent = c;
+    });
+    codes.forEach(function (c, i) {
+      var t = D.teams[c], on = c === A ? " on" : c === B ? " on2" : "";
+      el("circle", { class: "sdot" + on, cx: x(i), cy: y(t.boost), r: on ? 6 : 4 }, svg);
+      if (on) el("text", { class: "slab", x: x(i), y: y(t.boost_hi) - 7, "text-anchor": "middle" }, svg).textContent = c;
+    });
+    var tip = document.createElement("div"); tip.className = "tip"; tip.setAttribute("aria-hidden", "true"); boxS.appendChild(tip);
+    codes.forEach(function (c, i) {
+      var r = el("rect", { class: "hit", x: x(i) - iw / n / 2, width: iw / n, y: m.t, height: ih }, svg);
+      r.addEventListener("pointerenter", function () {
+        var t = D.teams[c];
+        tip.innerHTML = "<b>#" + t.boost_rank + " of 32</b><div class='big'>" + t.name + "</div><div class='row'><span>extra boost</span><span>" + f1(t.boost) + " pts</span></div><div class='row'><span>95% range</span><span>" + f1(t.boost_lo) + " to " + f1(t.boost_hi) + "</span></div>";
+        var tw = tip.offsetWidth, left = x(i) + 12; if (left + tw > W) left = x(i) - tw - 12;
+        tip.style.left = Math.max(0, left) + "px"; tip.style.top = "0px"; tip.classList.add("on");
+      });
+      r.addEventListener("pointerleave", function () { tip.classList.remove("on"); });
+      r.addEventListener("click", function () { if (c !== A) { if (c === B) B = ""; A = c; render(); } });
+    });
+    var t = D.teams[A], sig = codes.filter(function (c) { return D.teams[c].boost_lo > 0 || D.teams[c].boost_hi < 0; }).length;
+    var v = "<b>" + t.name + "</b> rank #" + t.boost_rank + " of 32 with an extra home boost of <b>" + f1(t.boost) + " pts</b> (95% range " + f1(t.boost_lo) + " to " + f1(t.boost_hi) + "). ";
+    if (t.boost_lo > 0) v += "That range is entirely above zero, so their home field looks genuinely stronger than average.";
+    else if (t.boost_hi < 0) v += "That range sits entirely below zero, one of only " + sig + " teams like that. With 32 teams, about 1–2 would look like this by chance alone, so treat it with caution.";
+    else v += "The range includes zero, so their home field can't be told apart from an average one. That's true for " + (32 - sig) + " of 32 teams.";
+    $("ex-verdict").innerHTML = v;
+  }
+
+  function drawTiles() {
+    var t = D.teams[A];
+    $("ex-tiles").innerHTML =
+      "<div class='tile'><div class='n'>" + rec(t.home[0], t.home[1]) + "<small>" + pct(t.home[0], t.home[1]) + "%</small></div><div class='t'>home record, 1999–2025</div></div>" +
+      "<div class='tile'><div class='n'>" + rec(t.road[0], t.road[1]) + "<small>" + pct(t.road[0], t.road[1]) + "%</small></div><div class='t'>road record</div></div>" +
+      "<div class='tile'><div class='n'>" + f1(t.boost) + "<small>pts · #" + t.boost_rank + "</small></div><div class='t'>extra home boost vs. average</div></div>" +
+      "<div class='tile'><div class='n'>" + t.best[0] + "<small>" + f1(t.best[1]) + "</small></div><div class='t'>best season (team rating)</div></div>";
+  }
+
+  function drawH2H() {
+    var box = $("ex-h2h");
+    if (!B) { box.hidden = true; return; }
+    box.hidden = false;
+    var flip = A > B, p = D.pairs[flip ? B + "|" + A : A + "|" + B];
+    if (!p) { $("ex-h2h-title").textContent = "These teams haven't played since 1999."; $("ex-h2h-stats").innerHTML = ""; $("ex-meets").innerHTML = ""; return; }
+    var aw = flip ? p.games - p.a_wins : p.a_wins, bw = p.games - aw;
+    var atA = flip ? p.at_b : p.at_a, atB = flip ? p.at_a : p.at_b, mg = flip ? -p.a_margin : p.a_margin;
+    $("ex-h2h-title").textContent = aw === bw ? "Dead even, " + rec(aw, bw) + " since 1999" :
+      "The " + (aw > bw ? nick(A) : nick(B)) + " lead the series " + rec(Math.max(aw, bw), Math.min(aw, bw)) + " since 1999";
+    $("ex-h2h-stats").innerHTML =
+      "<div><b>" + aw + "</b><span>" + nick(A) + " wins</span></div><div><b>" + bw + "</b><span>" + nick(B) + " wins</span></div>" +
+      "<div><b>" + f1(mg) + "</b><span>" + nick(A) + " avg margin</span></div>" +
+      "<div><b>" + rec(atA[0], atA[1]) + "</b><span>" + nick(A) + " at home</span></div><div><b>" + rec(atB[1], atB[0]) + "</b><span>" + nick(A) + " on the road</span></div>" +
+      "<div><b>" + p.games + "</b><span>games</span></div>";
+    $("ex-meets").innerHTML = p.last.map(function (g) {
+      var hw = g[3] > g[5];
+      return "<li><span>" + g[0] + " · wk " + g[1] + "</span><span>" + (hw ? g[4] + " " + g[5] : "<b>" + g[4] + " " + g[5] + "</b>") + " @ " + (hw ? "<b>" + g[2] + " " + g[3] + "</b>" : g[2] + " " + g[3]) + "</span></li>";
+    }).join("");
+  }
+
+  function render() {
+    selA.value = A; selB.value = B; swap.disabled = !B;
+    Array.prototype.forEach.call(selB.options, function (o) { o.disabled = o.value === A; });
+    drawTiles(); drawH2H(); drawRating(); drawHomeRoad(); drawStrip();
+  }
+
+  fetch("data/teams.json").then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (d) {
+    D = d;
+    var codes = Object.keys(D.teams).sort(function (a, b) { return D.teams[a].name < D.teams[b].name ? -1 : 1; });
+    codes.forEach(function (c) {
+      selA.add(new Option(D.teams[c].name, c));
+      selB.add(new Option(D.teams[c].name, c));
+    });
+    selA.addEventListener("change", function () { A = selA.value; if (B === A) B = ""; render(); });
+    selB.addEventListener("change", function () { B = selB.value; render(); });
+    swap.addEventListener("click", function () { if (!B) return; var t = A; A = B; B = t; render(); });
+    render();
+    var lastW = boxR.clientWidth;
+    if ("ResizeObserver" in window) new ResizeObserver(function () { if (boxR.clientWidth !== lastW) { lastW = boxR.clientWidth; drawRating(); drawHomeRoad(); drawStrip(); } }).observe(boxR);
+  }).catch(function () {
+    $("ex-tiles").innerHTML = "<div class='tile'><div class='t'>The team explorer couldn't load. Try refreshing the page.</div></div>";
+  });
 })();
 </script>
 
