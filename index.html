@@ -505,7 +505,7 @@ FROM nfl.games;</textarea>
           <h3>Where does home field matter most: the NFL or college football?</h3>
           <p class="lede">10,423 games across both leagues. Raw numbers say college home field is far bigger. Once team strength is removed, it's about 2 points in both. College only looks bigger because strong schools schedule weak visitors at home.</p>
         </div>
-        <span class="tag"><span class="dot"></span>Complete · v3</span>
+        <span class="tag"><span class="dot"></span>Complete · v4</span>
       </div>
 
       <div class="tiles">
@@ -538,6 +538,7 @@ FROM nfl.games;</textarea>
             <li>Loaded it into PostgreSQL next to the NFL games, with a SQL view that stacks both leagues for side-by-side queries.</li>
             <li>Removed team strength with the same rating model as the NFL study, then tested differences with statsmodels.</li>
             <li>Stress-tested the result four ways (capped blowouts, a wins-only model, real close matchups, season placebo). My first version's 2020 headline didn't survive, so I corrected it; the repo documents what changed.</li>
+            <li>Forecast every 2016–2025 game using only what was known before kickoff, to test whether home field actually helps predict results.</li>
           </ul>
 
           <h4>Tools</h4>
@@ -551,12 +552,13 @@ FROM nfl.games;</textarea>
             <li><b>College looks bigger only because of scheduling:</b> in non-conference games the home school starts ~7 points stronger. With strength removed, those games show the same +2.4 edge.</li>
             <li><b>2020:</b> the NFL's edge vanished (+0.1 pts), though 2019 was nearly as low. College margins shrank, but home teams won as often as usual, so the evidence there is mixed.</li>
             <li><b>Crowd size matters only a little:</b> about +0.2 pts per 10,000 extra fans within a conference. Schools with modest crowds still get most of the edge.</li>
+            <li><b>Home field helps predict games:</b> forecasting each game before kickoff, adding the home edge made forecasts better in both leagues (NFL p = 0.01, college p &lt; 0.001). The forecasts pick the winner 63% (NFL) and 70% (college) of the time.</li>
           </ul>
         </div>
       </div>
 
       <div class="case-foot">
-        <span class="note">Notebook, SQL, robustness checks and charts on GitHub</span>
+        <span class="note">Notebook, SQL, robustness checks, forecasts and charts on GitHub</span>
         <a class="btn primary" href="https://github.com/wdouble2/nfl-home-field-advantage">View code on GitHub <span class="arr up">↗</span></a>
       </div>
     </article>
